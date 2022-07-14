@@ -32,13 +32,13 @@ logging.basicConfig(
 
 
 class HomeworksIsNotList(Exception):
-    """Класс исключения"""
+    """Класс исключения."""
 
     pass
 
 
 def send_message(bot, message) -> None:
-    """Отправка сообщения пользователю"""
+    """Отправка сообщения пользователю."""
     bot.send_message(
         chat_id=TELEGRAM_CHAT_ID,
         text=message
@@ -46,7 +46,7 @@ def send_message(bot, message) -> None:
 
 
 def get_api_answer(current_timestamp) -> dict:
-    """Получение ответа с сервера за определенный период времени"""
+    """Получение ответа с сервера за определенный период времени."""
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     try:
@@ -59,7 +59,7 @@ def get_api_answer(current_timestamp) -> dict:
 
 
 def check_response(response) -> list:
-    """Проверка ответа API на корректность"""
+    """Проверка ответа API на корректность."""
     try:
         homeworks = response['homeworks']
     except KeyError as error:
@@ -71,7 +71,7 @@ def check_response(response) -> list:
 
 
 def parse_status(homework):
-    """Получение статуса домашней работы"""
+    """Получение статуса домашней работы."""
     homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
     verdict = HOMEWORK_STATUSES[homework_status]
@@ -79,7 +79,7 @@ def parse_status(homework):
 
 
 def check_tokens() -> bool:
-    """Проверка переменных окружения"""
+    """Проверка переменных окружения."""
     return all((PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID))
 
 
