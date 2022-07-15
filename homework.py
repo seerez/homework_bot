@@ -1,20 +1,15 @@
 import logging
 import os
-import time
 import sys
+import time
+from http import HTTPStatus
 
 import requests
-from http import HTTPStatus
 import telegram
 from dotenv import load_dotenv
-from exceptions import (HomeworksIsNotList,
-                        MessageIsNotSent,
-                        ResponseError,
-                        ResponseNotAnswered,
-                        ErrorAccessingJson,
-                        ErrorAccessingName,
-                        ErrorAccessingStatus,
-                        )
+
+from exceptions import (ErrorAccessingJson, HomeworksIsNotList,
+                        MessageIsNotSent, ResponseError, ResponseNotAnswered)
 
 load_dotenv()
 
@@ -90,12 +85,12 @@ def parse_status(homework):
     """Получение статуса домашней работы."""
     if homework.get('homework_name') is None:
         raise KeyError('Ошибка при обращении к homework_name')
-    homework_name = homework['homework_name']
-    homework_status = homework['status']
+    homework_name = homework.get('homework_name')
+    homework_status = homework.get('status')
     if homework_name is None:
-        raise ErrorAccessingName("Ошибка при обращении к homework_name")
+        raise KeyError('Ошибка при обращении к homework_name')
     if homework_status is None:
-        raise ErrorAccessingStatus("Ошибка при обращении к status")
+        raise KeyError("Ошибка при обращении к status")
     verdict = HOMEWORK_STATUSES[homework_status]
     if verdict is None:
         raise KeyError("Вердикта нет в словаре")

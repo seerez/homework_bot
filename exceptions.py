@@ -26,15 +26,3 @@ class ErrorAccessingJson(Exception):
     """Ошибка при форматировании данных в формат json."""
 
     pass
-
-
-class ErrorAccessingName(Exception):
-    """Ошибка при обращении к homework_name."""
-
-    pass
-
-
-class ErrorAccessingStatus(Exception):
-    """Ошибка при обращении к status."""
-
-    pass
