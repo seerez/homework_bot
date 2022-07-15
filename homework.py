@@ -48,6 +48,7 @@ def send_message(bot, message) -> None:
             chat_id=TELEGRAM_CHAT_ID,
             text=message
         )
+        logging.info('Сообщение отправлено')
     except MessageIsNotSent:
         logging.error('Ошибка при отправке сообщения')
 
@@ -80,14 +81,15 @@ def check_response(response) -> list:
         logging.error('Ошибка доступа к ключу current_date')
         raise KeyError('Ключ current_date отсутсвует в словаре')
     homeworks = response['homeworks']
-    hw_list = response.get('homeworks', None)
-    if not isinstance(hw_list, list):
+    if not isinstance(homeworks, list):
         raise HomeworksIsNotList('The list of homeworks is not a list')
     return homeworks
 
 
 def parse_status(homework):
     """Получение статуса домашней работы."""
+    if homework.get('homework_name') is None:
+        raise KeyError('Ошибка при обращении к homework_name')
     homework_name = homework['homework_name']
     homework_status = homework['status']
     if homework_name is None:
@@ -108,8 +110,8 @@ def check_tokens() -> bool:
 def main() -> None:
     """Основная логика работы бота."""
     if not check_tokens():
-        sys.exit(1)
         logging.critical('Отсутсвуют одна или несколько переменных окружения')
+        sys.exit('Отсутсвуют одна или несколько переменных окружения')
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_report = {}
     prev_report = {}
@@ -133,8 +135,8 @@ def main() -> None:
             if current_report != prev_report:
                 send_message(bot, current_report.get('message'))
                 prev_report = current_report.copy()
-            if homework is False:
-                print('Список домашних заданий пуст')
+            if not homework:
+                logging.info('Список домашних заданий пуст')
             else:
                 status = parse_status(homework[0])
                 send_message(bot, status)
