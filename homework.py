@@ -83,17 +83,15 @@ def check_response(response) -> list:
 
 def parse_status(homework):
     """Получение статуса домашней работы."""
-    if homework.get('homework_name') is None:
-        raise KeyError('Ошибка при обращении к homework_name')
     homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
     if homework_name is None:
         raise KeyError('Ошибка при обращении к homework_name')
     if homework_status is None:
         raise KeyError("Ошибка при обращении к status")
+    if HOMEWORK_STATUSES.get(homework_status) is None:
+        raise KeyError("Статуса нет в словаре")
     verdict = HOMEWORK_STATUSES[homework_status]
-    if verdict is None:
-        raise KeyError("Вердикта нет в словаре")
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
 
